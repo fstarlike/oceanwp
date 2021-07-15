@@ -83,9 +83,6 @@ final class OCEANWP_Theme_Class {
 			// Remove Customizer CSS script from Front-end.
 			add_action( 'init', array( 'OCEANWP_Theme_Class', 'remove_customizer_custom_css' ) );
 
-			// Load theme js.
-			add_action( 'wp_enqueue_scripts', array( 'OCEANWP_Theme_Class', 'theme_js' ) );
-
 			// Add a pingback url auto-discovery header for singularly identifiable articles.
 			add_action( 'wp_head', array( 'OCEANWP_Theme_Class', 'pingback_header' ), 1 );
 
@@ -126,6 +123,9 @@ final class OCEANWP_Theme_Class {
 			add_filter( 'fl_builder_override_lightbox', array( 'OCEANWP_Theme_Class', 'remove_bb_lightbox' ) );
 
 		}
+
+		// Load theme js.
+		add_action( 'wp_enqueue_scripts', array( 'OCEANWP_Theme_Class', 'theme_js' ) );
 
 	}
 
@@ -478,6 +478,14 @@ final class OCEANWP_Theme_Class {
 
 		if ( self::oceanwp_is_amp() ) {
 			return;
+		}
+
+		if ( is_admin() ) {
+			$current_url = wc_get_current_admin_url();
+
+			if ( ! ( strpos( $current_url, 'widgets.php' ) !== false ) ) {
+				return;
+			}
 		}
 
 		// Get js directory uri.
